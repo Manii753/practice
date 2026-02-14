@@ -1,17 +1,29 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { useReducer } from 'react';
-import { Todos } from './todos';
+import Todos from './todos';
 
+export const ACTIONS = {
+  ADD_TODO: 'add-todo',
+  DELETE_TODO: 'delete-todo',
+  TOGGLE_TODO: 'toggle-todo'
+}
 
 
 function reducer(state,action){
   switch(action.type){
-    case  "add-todo":
+    case  ACTIONS.ADD_TODO:
       return [...state , newTodo(action.payload.name)]
-
+    case ACTIONS.DELETE_TODO:
+      return state.filter(todo=> todo.id != action.payload)  
+    case ACTIONS.TOGGLE_TODO:
+      return state.map(todo =>
+        todo.id === action.payload
+          ? { ...todo, isComplete: !todo.isComplete }
+          : todo
+      );
+    default:
+      state
   }
  
 }
@@ -40,7 +52,7 @@ export default function App() {
         <input type='text' placeholder='Enter Todos' value={name} onChange={e => setName(e.target.value)}/>
       </form>
 
-      <Todos todos={todos}/>
+      <Todos todos={todos} dispatch={dispatch}></Todos>
     </>
   )
    
